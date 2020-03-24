@@ -1,10 +1,12 @@
 import time
-
 import requests
-from twilio.rest import Client
 import os
+from twilio.rest import Client
 from dotenv import load_dotenv
 load_dotenv()
+
+
+client = Client(os.getenv('account_sid'), os.getenv('auth_token'))
 
 def get_status(user_id):
     url = 'https://api.vk.com/method/users.get'
@@ -14,17 +16,13 @@ def get_status(user_id):
         'access_token': os.getenv('token'),
         'fields': 'online'
     }
-    response = requests.post(url, params = params)
+    response = requests.post(url, params=params)
     return response.json()['response'][0]['online']  # Верните статус пользователя в ВК
 
 
 def sms_sender(sms_text):
     # Your Account Sid and Auth Token from twilio.com/console
     # DANGER! This is insecure. See http://twil.io/secure
-    account_sid = os.getenv('account_sid')
-    auth_token = os.getenv('auth_token')
-    client = Client(account_sid, auth_token)
-
     message = client.messages \
         .create(
         body="hi!!",
